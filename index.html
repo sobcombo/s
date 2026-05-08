@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>SOB coMboS calculator V3.0</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+margin:0;
+padding:0;
+}
+
+.container{
+margin-top:20px;
+}
+
+input,select{
+padding:12px;
+margin:8px;
+width:90%;
+max-width:340px;
+font-size:16px;
+}
+
+.box{
+max-width:340px;
+margin:auto;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+font-size:18px;
+}
+
+button{
+padding:10px;
+margin:6px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:12px;
+border:1px solid black;
+}
+
+th,td{
+border:1px solid black;
+padding:5px;
+text-align:center;
+vertical-align:middle;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+margin-bottom:10px;
+}
+
+.activityRow{
+background:#f5f5f5;
+font-size:11px;
+font-weight:bold;
+}
+
+.activityCell{
+text-align:left;
+padding-left:8px;
+line-height:18px;
+}
+
+.footer-left{
+position:fixed;
+bottom:5px;
+left:10px;
+font-size:12px;
+}
+
+.footer-right{
+position:fixed;
+bottom:5px;
+right:10px;
+text-align:right;
+font-size:12px;
+}
+
+#a4{
+padding:10mm;
+box-sizing:border-box;
+}
+
+@media print{
+
+@page{
+margin:0;
+}
+
+body *{
+visibility:hidden;
+}
+
+#printArea,
+#printArea *{
+visibility:visible;
+}
+
+#printArea{
+position:absolute;
+top:0;
+width:100%;
+}
+
+h2{
+display:none !important;
+}
+
+button,
+input,
+select{
+display:none !important;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>SOB coMboS calculator V3.0</h2>
+
+<div class="container">
+
+<select id="combo" onchange="calc()">
+
+<option value="">Select Combo</option>
+
+<option value="170,80,70,150">
+390/300 TU Explorer Combo
+</option>
+
+<option value="170,80,0,227">
+397/307 Adventure Combo
+</option>
+
+<option value="170,80,28,200">
+398/308 ECO FUN Combo
+</option>
+
+<option value="170,80,255,0">
+425/335 Snow Adventure Combo
+</option>
+
+<option value="400,300,0,99">
+499/399 Aastha Combo
+</option>
+
+<option value="370,180,0,175">
+545/355 Shiv Ganesha Combo
+</option>
+
+<option value="550,375,0,50">
+600/425 Namah Combo
+</option>
+
+<option value="170,170,0,529,NA">
+699/NA Ultimate Play Combo
+</option>
+
+<option value="370,180,325,50">
+745/555 Viewing Fun Combo
+</option>
+
+<option value="550,375,249,170">
+969/794 Symbolic Combo
+</option>
+
+<option value="170,80,355,574">
+1099/1009 Delight Combo
+</option>
+
+<option value="370,180,355,574">
+1299/1109 Mini Blast Combo
+</option>
+
+<option value="550,375,250,599">
+1399/1224 All in Fun Combo
+</option>
+
+<option value="1350,775,0,150">
+1500/925 Divine Rush Combo
+</option>
+
+<option value="1400,1400,449,2350,NA">
+4199/NA Ultimate Mega Combo
+</option>
+
+</select>
+
+<br>
+
+<input
+type="number"
+id="adults"
+min="0"
+placeholder="No. of Adults"
+oninput="calc()"
+>
+
+<br>
+
+<input
+type="number"
+id="children"
+min="0"
+placeholder="No. of Children"
+oninput="calc()"
+>
+
+<p id="warning" style="color:red;"></p>
+
+<div class="box">
+
+<div class="row">
+<span>TPU</span>
+<span>Rs. <span id="tpu">0</span></span>
+</div>
+
+<div class="row">
+<span>OEPL</span>
+<span>Rs. <span id="oepl">0</span></span>
+</div>
+
+<div class="row">
+<span>PAEPL</span>
+<span>Rs. <span id="paepl">0</span></span>
+</div>
+
+<hr>
+
+<div class="row">
+<b>Total</b>
+<span>Rs. <span id="total">0</span></span>
+</div>
+
+</div>
+
+<br>
+
+<input
+type="tel"
+id="sobInput"
+maxlength="6"
+placeholder="Enter 6-digit SOB ID"
+>
+
+<br>
+
+<button onclick="saveEntry()">Save SOB</button>
+
+<button onclick="resetForm()">
+Reset Calculator
+</button>
+
+<button onclick="resetAllData()">
+Reset SOB IDs
+</button>
+
+<br>
+
+<button onclick="printA4()">
+Print A4
+</button>
+
+</div>
+
+<div id="printArea">
+
+<div id="a4">
+
+<div class="header">
+
+<div>
+POS# : __________
+</div>
+
+<div>
+USERNAME.S : ____________
+</div>
+
+<div>
+DATE : <span id="date"></span>
+</div>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>SR</th>
+<th>SOB ID</th>
+<th>TPU</th>
+<th>OEPL</th>
+<th>PAEPL</th>
+<th>TOTAL</th>
+<th>TIME</th>
+
+</tr>
+
+</thead>
+
+<tbody id="dataBody"></tbody>
+
+<tfoot>
+
+<tr>
+
+<td colspan="2"><b>TOTAL</b></td>
+
+<td id="tpuT"></td>
+<td id="oeplT"></td>
+<td id="paeplT"></td>
+<td id="grandT"></td>
+<td></td>
+
+</tr>
+
+</tfoot>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="footer-left">
+Last Updated: 08/05/2026 | V3.0
+</div>
+
+<div class="footer-right">
+Created for my Team :)<br>
+by MS
+</div>
+
+<script>
+
+let data =
+JSON.parse(localStorage.getItem("sobData")) || [];
+const todayKey =
+new Date().toLocaleDateString();
+
+const savedDate =
+localStorage.getItem("sobDate");
+
+if(savedDate !== todayKey){
+
+data = [];
+
+localStorage.removeItem("sobData");
+
+localStorage.setItem("sobDate",todayKey);
+
+}
+const tpuEl =
+document.getElementById("tpu");
+
+const oeplEl =
+document.getElementById("oepl");
+
+const paeplEl =
+document.getElementById("paepl");
+
+const totalEl =
+document.getElementById("total");
+
+function calc(){
+
+let v = combo.value;
+
+if(!v) return;
+
+let p = v.split(",");
+
+let ta = +p[0];
+let tc = +p[1];
+let o = +p[2];
+let pi = +p[3];
+
+let na = p[4] === "NA";
+
+let a =
+Math.max(0,+adults.value||0);
+
+let c =
+Math.max(0,+children.value||0);
+
+warning.innerText =
+(na && c>0)
+? "⚠ Children not allowed"
+: "";
+
+let tpu =
+(a*ta) + (c*tc);
+
+let oepl =
+(a+c)*o;
+
+let paepl =
+(a+c)*pi;
+
+let total =
+tpu + oepl + paepl;
+
+tpuEl.innerText = tpu;
+oeplEl.innerText = oepl;
+paeplEl.innerText = paepl;
+totalEl.innerText = total;
+
+return {
+tpu,
+oepl,
+paepl,
+total
+};
+
+}
+
+function getVendorBreakup(comboName,pax){
+
+function line(items){
+
+return items
+.map(i => `${i.name}: ${i.price * pax}`)
+.join(" | ");
+
+}
+
+/* IMPORTANT:
+LONGER NAMES FIRST
+*/
+
+if(comboName.includes("Snow Adventure")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:255}
+])}
+`;
+
+}
+
+else if(comboName.includes("Adventure Combo")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:227}
+])}
+`;
+
+}
+
+else if(comboName.includes("TU Explorer")){
+
+return `
+OEPL → ${line([
+{name:"Wax",price:70}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:70},
+{name:"WOG",price:80}
+])}
+`;
+
+}
+
+else if(comboName.includes("ECO FUN")){
+
+return `
+OEPL → ${line([
+{name:"Wax",price:28}
+])}
+<br>
+PAEPL → ${line([
+{name:"Mayalok",price:200}
+])}
+`;
+
+}
+
+else if(comboName.includes("Aastha")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:99}
+])}
+`;
+
+}
+
+else if(comboName.includes("Shiv Ganesha")){
+
+return `
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Gamezone",price:50},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("Namah")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Ultimate Play")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:529}
+])}
+`;
+
+}
+
+else if(comboName.includes("Viewing Fun")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:225},
+{name:"Food",price:100}
+])}
+<br>
+PAEPL → ${line([
+{name:"Gamezone",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Symbolic")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Wax",price:49}
+])}
+<br>
+PAEPL → ${line([
+{name:"Gamezone",price:100},
+{name:"WOG",price:70}
+])}
+`;
+
+}
+
+else if(comboName.includes("Delight")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Food",price:45},
+{name:"Souvenir",price:60},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:249},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("Mini Blast")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Food",price:45},
+{name:"Souvenir",price:60},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:249},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("All in Fun")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:279},
+{name:"WOG",price:70}
+])}
+`;
+
+}
+
+else if(comboName.includes("Divine Rush")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:100},
+{name:"WOG",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Ultimate Mega")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:150},
+{name:"Food",price:99},
+{name:"Souvenir",price:100},
+{name:"Wax",price:100}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:150},
+{name:"Gamezone",price:2100},
+{name:"WOG",price:50}
+])}
+`;
+
+}
+
+return "-";
+
+}
+
+function saveEntry(){
+
+let raw =
+sobInput.value.trim();
+
+if(!/^[1-9][0-9]{5}$/.test(raw)){
+
+alert(
+"Enter valid 6-digit SOB ID"
+);
+
+return;
+
+}
+
+let sob =
+"SOB000" + raw;
+
+if(data.some(d => d.sob === sob)){
+
+alert(
+"This SOB ID already exists"
+);
+
+return;
+
+}
+
+let r = calc();
+
+if(!r) return;
+
+let pax =
+(+adults.value || 0) +
+(+children.value || 0);
+
+let comboName =
+combo.options[
+combo.selectedIndex
+].text;
+
+let breakup =
+getVendorBreakup(comboName,pax);
+
+data.push({
+
+sob,
+...r,
+comboName,
+breakup,
+
+time:
+new Date().toLocaleTimeString()
+
+});
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
+);
+
+render();
+
+sobInput.value = "";
+
+}
+
+function resetForm(){
+
+combo.selectedIndex = 0;
+
+adults.value = "";
+children.value = "";
+sobInput.value = "";
+
+tpuEl.innerText = 0;
+oeplEl.innerText = 0;
+paeplEl.innerText = 0;
+totalEl.innerText = 0;
+
+warning.innerText = "";
+
+}
+
+function resetAllData(){
+
+if(
+!confirm(
+"Delete all saved SOB IDs?"
+)
+) return;
+
+data = [];
+
+localStorage.removeItem(
+"sobData"
+);
+
+render();
+
+}
+
+function render(){
+
+dataBody.innerHTML = "";
+
+let totalAll = 0;
+let tpuSum = 0;
+let oeplSum = 0;
+let paeplSum = 0;
+
+data.forEach((d,i)=>{
+
+dataBody.innerHTML += `
+
+<tr>
+
+<td rowspan="2">
+${i+1}
+</td>
+
+<td rowspan="2">
+${d.sob}
+<br>
+<span style="font-size:10px;">
+(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+</span>
+</td>
+
+<td rowspan="2">
+${d.tpu}
+</td>
+
+<td rowspan="2">
+${d.oepl}
+</td>
+
+<td rowspan="2">
+${d.paepl}
+</td>
+
+<td rowspan="2">
+${d.total}
+</td>
+
+<td rowspan="2">
+${d.time}
+</td>
+
+</tr>
+
+<tr class="activityRow">
+
+<td colspan="5" class="activityCell">
+${d.breakup}
+</td>
+
+</tr>
+
+`;
+
+tpuSum += d.tpu;
+oeplSum += d.oepl;
+paeplSum += d.paepl;
+totalAll += d.total;
+
+});
+
+grandT.innerText = totalAll;
+tpuT.innerText = tpuSum;
+oeplT.innerText = oeplSum;
+paeplT.innerText = paeplSum;
+
+}
+
+function printA4(){
+
+window.print();
+
+}
+
+function setDate(){
+
+const today =
+new Date().toLocaleDateString();
+
+document.getElementById("date").innerText =
+today;
+
+}
+
+setDate();
+
+render();
+
+</script>
+
+</body>
+</html>
