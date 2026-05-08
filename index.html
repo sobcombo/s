@@ -731,14 +731,21 @@ data.push({
 
 sob,
 ...r,
+
 comboName,
+
+adults:
+(+adults.value || 0),
+
+children:
+(+children.value || 0),
+
 breakup,
 
 time:
 new Date().toLocaleTimeString()
 
 });
-
 localStorage.setItem(
 "sobData",
 JSON.stringify(data)
@@ -807,8 +814,12 @@ ${i+1}
 <td rowspan="2">
 ${d.sob}
 <br>
-<span style="font-size:10px;">
+<span style="
+font-size:9px;
+white-space:nowrap;
+">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+(${d.adults}.A + ${d.children}.C)
 </span>
 </td>
 
