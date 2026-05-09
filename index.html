@@ -384,7 +384,7 @@ Last Updated: 08/05/2026 | V3.0
 let data =
 JSON.parse(localStorage.getItem("sobData")) || [];
 const todayKey =
-new Date().toLocaleDateString();
+new Date().toLocaleDateString('en-GB');
 
 const savedDate =
 localStorage.getItem("sobDate");
@@ -886,7 +886,7 @@ window.print();
 function setDate(){
 
 const today =
-new Date().toLocaleDateString();
+new Date().toLocaleDateString('en-GB');
 
 document.getElementById("date").innerText =
 today;
