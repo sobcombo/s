@@ -374,7 +374,7 @@ DATE : <span id="date"></span>
 <th>PAEPL</th>
 <th>TOTAL</th>
 <th>TIME</th>
-<th>DELETE</th>
+<th class="deleteBtn">DELETE</th>
 
 </tr>
 
@@ -830,8 +830,6 @@ render();
 
 }
 
-/* DELETE SINGLE ENTRY */
-
 function deleteEntry(index){
 
 if(
@@ -900,7 +898,7 @@ ${d.total}
 ${d.time}
 </td>
 
-<td rowspan="2">
+<td rowspan="2" class="deleteBtn">
 
 <button
 class="deleteBtn"
