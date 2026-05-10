@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <title>SOB coMboS calculator V3.0</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link
 href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
 rel="stylesheet">
+
 <style>
 
 *{
@@ -15,12 +18,12 @@ font-family:'Arimo',sans-serif;
 box-sizing:border-box;
 }
 
-body
-  {
+body{
 text-align:center;
 margin:0;
 padding:0;
-  }  
+}
+
 .container{
 margin-top:20px;
 }
@@ -57,6 +60,7 @@ border-collapse:collapse;
 font-size:12px;
 border:1px solid black;
 }
+
 th,td{
 border:1px solid black;
 padding:2px 4px;
@@ -106,42 +110,64 @@ padding:10mm;
 box-sizing:border-box;
 }
 
-@media print{
-  
-*{
-font-family:'Arimo',sans-serif !important;
+/* PRINT FIX */
+
+@media print {
+
+@page{
+size:A4 portrait;
+margin:10mm;
+}
+
+html,body{
+width:210mm;
+height:auto;
+margin:0;
+padding:0;
+font-family:'Arimo',sans-serif;
 -webkit-print-color-adjust:exact;
 print-color-adjust:exact;
 }
 
-@page{
-margin:0;
+body{
+background:white;
 }
 
-body *{
-visibility:hidden;
-}
-
-#printArea,
-#printArea *{
-visibility:visible;
+.container,
+.footer-left,
+.footer-right,
+h2,
+.deleteBtn{
+display:none !important;
 }
 
 #printArea{
-position:absolute;
-top:0;
-left:0;
+display:block !important;
+position:relative;
+width:100%;
+margin:0;
+padding:0;
+}
+
+#a4{
+padding:0;
+margin:0;
 width:100%;
 }
 
-h2{
-display:none !important;
+table{
+width:100%;
+border-collapse:collapse;
+font-size:11px;
 }
 
-button,
-input,
-select{
-display:none !important;
+tr{
+page-break-inside:avoid;
+}
+
+th,td{
+border:1px solid black;
+padding:3px;
 }
 
 }
@@ -295,7 +321,9 @@ placeholder="Enter 6-digit SOB ID"
 
 <br>
 
-<button onclick="saveEntry()">Save SOB</button>
+<button onclick="saveEntry()">
+Save SOB
+</button>
 
 <button onclick="resetForm()">
 Reset Calculator
@@ -346,6 +374,7 @@ DATE : <span id="date"></span>
 <th>PAEPL</th>
 <th>TOTAL</th>
 <th>TIME</th>
+<th>DELETE</th>
 
 </tr>
 
@@ -357,13 +386,15 @@ DATE : <span id="date"></span>
 
 <tr>
 
-<td colspan="2"><b>TOTAL</b></td>
+<td colspan="2">
+<b>TOTAL</b>
+</td>
 
 <td id="tpuT"></td>
 <td id="oeplT"></td>
 <td id="paeplT"></td>
 <td id="grandT"></td>
-<td></td>
+<td colspan="2"></td>
 
 </tr>
 
@@ -383,6 +414,7 @@ Last Updated: 08/05/2026 | V3.0
 
 let data =
 JSON.parse(localStorage.getItem("sobData")) || [];
+
 const todayKey =
 new Date().toLocaleDateString('en-GB');
 
@@ -398,6 +430,7 @@ localStorage.removeItem("sobData");
 localStorage.setItem("sobDate",todayKey);
 
 }
+
 const tpuEl =
 document.getElementById("tpu");
 
@@ -471,10 +504,6 @@ return items
 .join(" | ");
 
 }
-
-/* IMPORTANT:
-LONGER NAMES FIRST
-*/
 
 if(comboName.includes("Snow Adventure")){
 
@@ -754,6 +783,7 @@ time:
 new Date().toLocaleTimeString()
 
 });
+
 localStorage.setItem(
 "sobData",
 JSON.stringify(data)
@@ -794,6 +824,25 @@ data = [];
 
 localStorage.removeItem(
 "sobData"
+);
+
+render();
+
+}
+
+/* DELETE SINGLE ENTRY */
+
+function deleteEntry(index){
+
+if(
+!confirm("Delete this SOB ID?")
+) return;
+
+data.splice(index,1);
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
 );
 
 render();
@@ -851,6 +900,17 @@ ${d.total}
 ${d.time}
 </td>
 
+<td rowspan="2">
+
+<button
+class="deleteBtn"
+onclick="deleteEntry(${i})"
+>
+❌
+</button>
+
+</td>
+
 </tr>
 
 <tr class="activityRow">
@@ -900,4 +960,5 @@ render();
 </script>
 
 </body>
+
 </html>
