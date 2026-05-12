@@ -27,6 +27,41 @@ padding:0;
 .container{
 margin-top:20px;
 }
+.top-buttons{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 12px 0 12px;
+}
+
+.switch-btn{
+background:#1565c0;
+color:white;
+padding:6px 10px;
+border-radius:6px;
+text-decoration:none;
+font-size:12px;
+font-weight:bold;
+display:inline-block;
+}
+
+.switch-btn:hover{
+background:#0d47a1;
+}
+
+.deleteBtn{
+padding:2px 6px;
+font-size:11px;
+line-height:1;
+margin:0;
+min-width:auto;
+}
+
+#a4{
+padding:8mm;
+box-sizing:border-box;
+overflow:hidden;
+}
 
 input,select{
 padding:12px;
@@ -110,74 +145,104 @@ padding:10mm;
 box-sizing:border-box;
 }
 
-/* PRINT FIX */
-
 @media print {
 
 @page{
 size:A4 portrait;
-margin:10mm;
+margin:8mm;
 }
 
 html,body{
-width:210mm;
-height:auto;
 margin:0;
 padding:0;
+width:100%;
+height:auto;
+background:white;
 font-family:'Arimo',sans-serif;
 -webkit-print-color-adjust:exact;
 print-color-adjust:exact;
-}
-
-body{
-background:white;
+overflow:visible;
 }
 
 .container,
 .footer-left,
 .footer-right,
 h2,
+.top-buttons,
 .deleteBtn{
 display:none !important;
 }
 
 #printArea{
 display:block !important;
-position:relative;
 width:100%;
 margin:0;
 padding:0;
+overflow:visible;
 }
 
 #a4{
+width:100%;
 padding:0;
 margin:0;
-width:100%;
+box-sizing:border-box;
+overflow:visible;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-font-size:11px;
-}
-
-tr{
-page-break-inside:avoid;
+font-size:10px;
+table-layout:auto;
 }
 
 th,td{
 border:1px solid black;
 padding:3px;
+word-break:break-word;
+vertical-align:middle;
+}
+
+tr{
+page-break-inside:avoid;
+break-inside:avoid;
+}
+
+.activityCell{
+font-size:9px;
+line-height:11px;
+word-break:break-word;
+}
+
+.header{
+margin-bottom:8px;
+font-size:11px;
+}
+.deleteColumn{
+display:none !important;
 }
 
 }
-
 </style>
 
 </head>
 
 <body>
+<div class="top-buttons">
 
+<a class="switch-btn"
+href="https://sobcombo.github.io/sobcombo/"
+target="_blank">
+Switch to Basic Calc
+</a>
+
+<a class="switch-btn"
+href="https://sobcombo.github.io/r/"
+target="_blank">
+Switch to Daily Report
+</a>
+
+</div>
 <h2>SOB coMboS calculator V3.0</h2>
 
 <div class="container">
@@ -374,7 +439,7 @@ DATE : <span id="date"></span>
 <th>PAEPL</th>
 <th>TOTAL</th>
 <th>TIME</th>
-<th>DELETE</th>
+<th class="deleteColumn" style="width:40px;">DEL</th>
 
 </tr>
 
@@ -407,7 +472,7 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 08/05/2026 | V3.0
+Last Updated: 12/05/2026 | V3.0
 </div>
 
 <script>
@@ -830,8 +895,6 @@ render();
 
 }
 
-/* DELETE SINGLE ENTRY */
-
 function deleteEntry(index){
 
 if(
@@ -900,13 +963,13 @@ ${d.total}
 ${d.time}
 </td>
 
-<td rowspan="2">
+<td rowspan="2" class="deleteColumn">
 
 <button
 class="deleteBtn"
 onclick="deleteEntry(${i})"
 >
-❌
+X
 </button>
 
 </td>
