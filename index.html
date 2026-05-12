@@ -223,6 +223,27 @@ display:none !important;
 }
 
 }
+.table-wrapper{
+    width:100%;
+}
+
+@media screen and (max-width: 768px){
+
+.table-wrapper{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+table{
+    min-width:700px;
+}
+
+.deleteBtn{
+    font-size:10px;
+    padding:2px 4px;
+}
+
+}
 </style>
 
 </head>
@@ -426,6 +447,7 @@ DATE : <span id="date"></span>
 
 </div>
 
+<div class="table-wrapper">
 <table>
 
 <thead>
@@ -466,7 +488,7 @@ DATE : <span id="date"></span>
 </tfoot>
 
 </table>
-
+</div>
 </div>
 
 </div>
