@@ -97,14 +97,6 @@ left:10px;
 font-size:12px;
 }
 
-.footer-right{
-position:fixed;
-bottom:5px;
-right:10px;
-text-align:right;
-font-size:12px;
-}
-
 #a4{
 padding:10mm;
 box-sizing:border-box;
@@ -116,14 +108,15 @@ box-sizing:border-box;
 
 @page{
 size:A4 portrait;
-margin:10mm;
+margin:5mm;
 }
 
 html,body{
-width:210mm;
+width:100%;
 height:auto;
 margin:0;
 padding:0;
+overflow:hidden;
 font-family:'Arimo',sans-serif;
 -webkit-print-color-adjust:exact;
 print-color-adjust:exact;
@@ -135,39 +128,40 @@ background:white;
 
 .container,
 .footer-left,
-.footer-right,
-h2,
 .deleteBtn{
 display:none !important;
 }
 
 #printArea{
 display:block !important;
-position:relative;
 width:100%;
 margin:0;
 padding:0;
+overflow:hidden;
 }
 
 #a4{
-padding:0;
-margin:0;
 width:100%;
+margin:0;
+padding:0;
+overflow:hidden;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-font-size:11px;
-}
-
-tr{
-page-break-inside:avoid;
+font-size:10.5px;
+table-layout:auto;
 }
 
 th,td{
 border:1px solid black;
 padding:3px;
+word-break:break-word;
+}
+
+tr{
+page-break-inside:avoid;
 }
 
 }
@@ -179,36 +173,10 @@ padding:3px;
 <body>
 
 <div style="
-position:absolute;
-top:10px;
-right:10px;
-z-index:999;
-">
-
-<a href="https://sobcombo.github.io/r/"
-target="_blank"
-style="
-background:#1565c0;
-color:white;
-padding:6px 10px;
-border-radius:6px;
-text-decoration:none;
-font-size:11px;
-font-weight:bold;
-display:inline-block;
-">
-
-Switch to Daily Report
-
-</a>
-
-</div>
-
-<div style="
-position:absolute;
-top:10px;
-right:10px;
-z-index:999;
+width:100%;
+display:flex;
+justify-content:flex-end;
+padding:10px 10px 0 10px;
 ">
 
 <a href="https://sobcombo.github.io/r/"
@@ -222,17 +190,22 @@ text-decoration:none;
 font-size:11px;
 font-weight:bold;
 display:inline-block;
+white-space:nowrap;
 ">
 
- Switch to Daily Report
+Switch to Daily Report
 
 </a>
 
 </div>
 
-<h2>SOB coMboS calculator V3.0</h2>
+<h2 style="margin-top:5px;">
+SOB coMboS calculator V3.0
+</h2>
 
 <div class="container">
+
+<select id="combo" onchange="calc()">
 
 <option value="">Select Combo</option>
 
@@ -457,7 +430,7 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 08/05/2026 | V3.0
+Last Updated: 12/05/2026 | V3.0
 </div>
 
 <script>
@@ -544,466 +517,6 @@ total
 };
 
 }
-
-function getVendorBreakup(comboName,pax){
-
-function line(items){
-
-return items
-.map(i => `${i.name}: ${i.price * pax}`)
-.join(" | ");
-
-}
-
-if(comboName.includes("Snow Adventure")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:255}
-])}
-`;
-
-}
-
-else if(comboName.includes("Adventure Combo")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:227}
-])}
-`;
-
-}
-
-else if(comboName.includes("TU Explorer")){
-
-return `
-OEPL → ${line([
-{name:"Wax",price:70}
-])}
-<br>
-PAEPL → ${line([
-{name:"Eyelusion",price:70},
-{name:"WOG",price:80}
-])}
-`;
-
-}
-
-else if(comboName.includes("ECO FUN")){
-
-return `
-OEPL → ${line([
-{name:"Wax",price:28}
-])}
-<br>
-PAEPL → ${line([
-{name:"Mayalok",price:200}
-])}
-`;
-
-}
-
-else if(comboName.includes("Aastha")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:99}
-])}
-`;
-
-}
-
-else if(comboName.includes("Shiv Ganesha")){
-
-return `
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Gamezone",price:50},
-{name:"WOG",price:75}
-])}
-`;
-
-}
-
-else if(comboName.includes("Namah")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:50}
-])}
-`;
-
-}
-
-else if(comboName.includes("Ultimate Play")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:529}
-])}
-`;
-
-}
-
-else if(comboName.includes("Viewing Fun")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:225},
-{name:"Food",price:100}
-])}
-<br>
-PAEPL → ${line([
-{name:"Gamezone",price:50}
-])}
-`;
-
-}
-
-else if(comboName.includes("Symbolic")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Wax",price:49}
-])}
-<br>
-PAEPL → ${line([
-{name:"Gamezone",price:100},
-{name:"WOG",price:70}
-])}
-`;
-
-}
-
-else if(comboName.includes("Delight")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Food",price:45},
-{name:"Souvenir",price:60},
-{name:"Wax",price:50}
-])}
-<br>
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:249},
-{name:"WOG",price:75}
-])}
-`;
-
-}
-
-else if(comboName.includes("Mini Blast")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Food",price:45},
-{name:"Souvenir",price:60},
-{name:"Wax",price:50}
-])}
-<br>
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:249},
-{name:"WOG",price:75}
-])}
-`;
-
-}
-
-else if(comboName.includes("All in Fun")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Wax",price:50}
-])}
-<br>
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:279},
-{name:"WOG",price:70}
-])}
-`;
-
-}
-
-else if(comboName.includes("Divine Rush")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:100},
-{name:"WOG",price:50}
-])}
-`;
-
-}
-
-else if(comboName.includes("Ultimate Mega")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:150},
-{name:"Food",price:99},
-{name:"Souvenir",price:100},
-{name:"Wax",price:100}
-])}
-<br>
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:150},
-{name:"Gamezone",price:2100},
-{name:"WOG",price:50}
-])}
-`;
-
-}
-
-return "-";
-
-}
-
-function saveEntry(){
-
-let raw =
-sobInput.value.trim();
-
-if(!/^[1-9][0-9]{5}$/.test(raw)){
-
-alert(
-"Enter valid 6-digit SOB ID"
-);
-
-return;
-
-}
-
-let sob =
-"SOB000" + raw;
-
-if(data.some(d => d.sob === sob)){
-
-alert(
-"This SOB ID already exists"
-);
-
-return;
-
-}
-
-let r = calc();
-
-if(!r) return;
-
-let pax =
-(+adults.value || 0) +
-(+children.value || 0);
-
-let comboName =
-combo.options[
-combo.selectedIndex
-].text;
-
-let breakup =
-getVendorBreakup(comboName,pax);
-
-data.push({
-
-sob,
-...r,
-
-comboName,
-
-adults:
-(+adults.value || 0),
-
-children:
-(+children.value || 0),
-
-breakup,
-
-time:
-new Date().toLocaleTimeString()
-
-});
-
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-render();
-
-sobInput.value = "";
-
-}
-
-function resetForm(){
-
-combo.selectedIndex = 0;
-
-adults.value = "";
-children.value = "";
-sobInput.value = "";
-
-tpuEl.innerText = 0;
-oeplEl.innerText = 0;
-paeplEl.innerText = 0;
-totalEl.innerText = 0;
-
-warning.innerText = "";
-
-}
-
-function resetAllData(){
-
-if(
-!confirm(
-"Delete all saved SOB IDs?"
-)
-) return;
-
-data = [];
-
-localStorage.removeItem(
-"sobData"
-);
-
-render();
-
-}
-
-function deleteEntry(index){
-
-if(
-!confirm("Delete this SOB ID?")
-) return;
-
-data.splice(index,1);
-
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-render();
-
-}
-
-function render(){
-
-dataBody.innerHTML = "";
-
-let totalAll = 0;
-let tpuSum = 0;
-let oeplSum = 0;
-let paeplSum = 0;
-
-data.forEach((d,i)=>{
-
-dataBody.innerHTML += `
-
-<tr>
-
-<td rowspan="2">
-${i+1}
-</td>
-
-<td rowspan="2">
-${d.sob}
-<br>
-<span style="
-font-size:9px;
-white-space:nowrap;
-">
-(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
-(${d.adults}.A + ${d.children}.C)
-</span>
-</td>
-
-<td rowspan="2">
-${d.tpu}
-</td>
-
-<td rowspan="2">
-${d.oepl}
-</td>
-
-<td rowspan="2">
-${d.paepl}
-</td>
-
-<td rowspan="2">
-${d.total}
-</td>
-
-<td rowspan="2">
-${d.time}
-</td>
-
-<td rowspan="2" class="deleteBtn">
-
-<button
-class="deleteBtn"
-onclick="deleteEntry(${i})"
->
-❌
-</button>
-
-</td>
-
-</tr>
-
-<tr class="activityRow">
-
-<td colspan="5" class="activityCell">
-${d.breakup}
-</td>
-
-</tr>
-
-`;
-
-tpuSum += d.tpu;
-oeplSum += d.oepl;
-paeplSum += d.paepl;
-totalAll += d.total;
-
-});
-
-grandT.innerText = totalAll;
-tpuT.innerText = tpuSum;
-oeplT.innerText = oeplSum;
-paeplT.innerText = paeplSum;
-
-}
-
-function printA4(){
-
-window.print();
-
-}
-
-function setDate(){
-
-const today =
-new Date().toLocaleDateString('en-GB');
-
-document.getElementById("date").innerText =
-today;
-
-}
-
-setDate();
-
-render();
 
 </script>
 
