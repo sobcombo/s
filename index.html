@@ -122,14 +122,22 @@ font-size:11px;
 font-weight:bold;
 }
 
-.activityCell{
-text-align:left;
-padding-left:5px;
-line-height:13px;
-padding-top:2px;
-padding-bottom:2px;
+.activityCell {
+  text-align: left;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  padding: 5px 5px 5px 12px;
+  background: transparent;
 }
-
+.activityTotalsCell {
+  background: #eaeaea;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: left!important;
+  padding: 6px 6px 6px 12px;
+  vertical-align: top;
+}
 .footer-left{
 position:fixed;
 bottom:5px;
@@ -407,7 +415,7 @@ calc();
 <hr>
 
 <div class="row">
-<b>Total</b>
+<b style="font-size:14px;">TOTAL</b>
 <span>Rs. <span id="total">0</span></span>
 </div>
 
@@ -477,8 +485,9 @@ DATE : <span id="date"></span>
 <th>OEPL</th>
 <th>PAEPL</th>
 <th>TOTAL</th>
-<th>TIME</th>
 <th class="deleteColumn" style="width:40px;">DEL</th>
+<th>ACTIVITIES' AMOUNTS</th>
+<th>TIME</th>
 
 </tr>
 
@@ -491,14 +500,18 @@ DATE : <span id="date"></span>
 <tr>
 
 <td colspan="2">
-<b>TOTAL</b>
+<b style="font-size:11px;">TOTAL</b>
 </td>
 
-<td id="tpuT"></td>
-<td id="oeplT"></td>
-<td id="paeplT"></td>
-<td id="grandT"></td>
-<td colspan="2"></td>
+<td id="tpuT"><b>0</b></td>
+<td id="oeplT"><b>0</b></td>
+<td id="paeplT"><b>0</b></td>
+<td id="grandT"><b>0</b></td>
+
+<td class="deleteColumn"></td>
+
+<td id="activityTotals" class="activityTotalsCell"></td>
+<td></td>
 
 </tr>
 
@@ -511,7 +524,7 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 12/05/2026 | V3.0
+Last Updated: 16/05/2026 | V3.0
 </div>
 
 <script>
@@ -959,6 +972,8 @@ let totalAll = 0;
 let tpuSum = 0;
 let oeplSum = 0;
 let paeplSum = 0;
+let oeplActivities = {};
+let paeplActivities = {};
 
 data.forEach((d,i)=>{
 
@@ -966,59 +981,32 @@ dataBody.innerHTML += `
 
 <tr>
 
-<td rowspan="2">
-${i+1}
-</td>
+<td>${i+1}</td>
 
-<td rowspan="2">
-${d.sob}
+<td>
+<b>${d.sob}</b>
 <br>
-<span style="
-font-size:9px;
-white-space:nowrap;
-">
+<span style="font-size:9px;white-space:nowrap;">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
 (${d.adults}.A + ${d.children}.C)
 </span>
 </td>
 
-<td rowspan="2">
-${d.tpu}
+<td>${d.tpu}</td>
+<td>${d.oepl}</td>
+<td>${d.paepl}</td>
+<td>${d.total}</td>
+
+<td class="deleteColumn">
+<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
 </td>
 
-<td rowspan="2">
-${d.oepl}
-</td>
-
-<td rowspan="2">
-${d.paepl}
-</td>
-
-<td rowspan="2">
-${d.total}
-</td>
-
-<td rowspan="2">
-${d.time}
-</td>
-
-<td rowspan="2" class="deleteColumn">
-
-<button
-class="deleteBtn"
-onclick="deleteEntry(${i})"
->
-X
-</button>
-
-</td>
-
-</tr>
-
-<tr class="activityRow">
-
-<td colspan="5" class="activityCell">
+<td class="activityCell">
 ${d.breakup}
+</td>
+
+<td style="font-size:10px;">
+${formatTime(d.time)}
 </td>
 
 </tr>
@@ -1030,12 +1018,97 @@ oeplSum += d.oepl;
 paeplSum += d.paepl;
 totalAll += d.total;
 
+// Activity totals calculation
+
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = d.breakup;
+
+let text = tempDiv.innerText.split("\n");
+
+text.forEach(line => {
+
+line = line.trim();
+
+if(line.startsWith("OEPL")){
+
+let activities = line.replace("OEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+oeplActivities[name] =
+(oeplActivities[name] || 0) + value;
+
 });
 
-grandT.innerText = totalAll;
-tpuT.innerText = tpuSum;
-oeplT.innerText = oeplSum;
-paeplT.innerText = paeplSum;
+}
+
+if(line.startsWith("PAEPL")){
+
+let activities = line.replace("PAEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+paeplActivities[name] =
+(paeplActivities[name] || 0) + value;
+
+});
+
+}
+
+});
+
+});
+
+function formatTime(t){
+
+let d = new Date("1970-01-01 " + t);
+
+return d.toLocaleTimeString([], {
+hour: '2-digit',
+minute: '2-digit',
+hour12: true
+});
+
+}
+
+function formatActivities(obj){
+
+return Object.entries(obj)
+.map(([k,v]) => `${k}: ${v}`)
+.join(" | ");
+
+}
+
+grandT.innerHTML = "<b>" + totalAll + "</b>";
+tpuT.innerHTML = "<b>" + tpuSum + "</b>";
+oeplT.innerHTML = "<b>" + oeplSum + "</b>";
+paeplT.innerHTML = "<b>" + paeplSum + "</b>";
+
+activityTotals.innerHTML = `
+
+OEPL → ${formatActivities(oeplActivities)}
+
+<br>
+
+PAEPL → ${formatActivities(paeplActivities)}
+
+`;
 
 }
 
