@@ -602,7 +602,7 @@ tpuEl.innerText = tpu;
 oeplEl.innerText = oepl;
 paeplEl.innerText = paepl;
 totalEl.innerText = total;
-
+saveFormState();
 return {
 tpu,
 oepl,
@@ -611,7 +611,15 @@ total
 };
 
 }
+function saveFormState(){
 
+localStorage.setItem("lastCombo", combo.value);
+
+localStorage.setItem("lastAdults", adults.value);
+
+localStorage.setItem("lastChildren", children.value);
+
+}
 function getVendorBreakup(comboName,pax){
 
 function line(items){
@@ -919,7 +927,11 @@ combo.selectedIndex = 0;
 adults.value = "";
 children.value = "";
 sobInput.value = "";
+localStorage.removeItem("lastCombo");
 
+localStorage.removeItem("lastAdults");
+
+localStorage.removeItem("lastChildren");
 tpuEl.innerText = 0;
 oeplEl.innerText = 0;
 paeplEl.innerText = 0;
@@ -1127,7 +1139,24 @@ document.getElementById("date").innerText =
 today;
 
 }
+function restoreFormState(){
 
+combo.value =
+localStorage.getItem("lastCombo") || "";
+
+adults.value =
+localStorage.getItem("lastAdults") || "";
+
+children.value =
+localStorage.getItem("lastChildren") || "";
+
+if(combo.value){
+calc();
+}
+
+}
+
+restoreFormState();
 setDate();
 
 render();
