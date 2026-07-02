@@ -223,14 +223,14 @@ background:#f5f5f5;
 font-size:11px;
 font-weight:bold;
 }
-
-.activityCell {
-  text-align: left;
-  font-size: 10px;
-  font-weight: bold;
-  line-height: 14px;
-  padding: 5px 5px 5px 12px;
-  background: transparent;
+  .activityCell{
+    text-align:left;
+    font-size:10px;
+    font-weight:bold;
+    line-height:15px;
+    padding:5px 5px 5px 10px;
+    white-space:pre-line;
+    word-break:keep-all;
 }
 .activityTotalsCell {
   background: #eaeaea;
@@ -478,7 +478,11 @@ padding:3px;
 word-break:break-word;
 vertical-align:middle;
 }
-
+table th,
+table td{
+    white-space:nowrap;
+}
+  
 tr{
 page-break-inside:avoid;
 break-inside:avoid;
@@ -489,7 +493,9 @@ font-size:9px;
 line-height:11px;
 word-break:break-word;
 }
-
+.activityCell{
+    white-space:pre-line;
+}
 .header{
 margin-bottom:8px;
 font-size:11px;
@@ -1560,13 +1566,11 @@ tempDate.setHours(h);
 
 tempDate.setMinutes(m);
 
-let newTime =
-tempDate.toLocaleTimeString('en-US',{
-hour:'2-digit',
-minute:'2-digit',
-second:'2-digit',
-hour12:true
-});
+let hh = document.getElementById("editHour").value;
+let mm = document.getElementById("editMinute").value;
+let ap = document.getElementById("editAmPm").value;
+
+let newTime = `${hh}:${mm} ${ap}`;
 
 let comboSelect =
 document.getElementById("editCombo");
@@ -1682,7 +1686,11 @@ dataBody.innerHTML += `
 <td>
 <b>${d.sob}</b>
 <br>
-<span style="font-size:9px;white-space:nowrap;">
+<span style="
+font-size:9px;
+white-space:nowrap;
+display:inline-block;
+">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
 (${d.adults}.A + ${d.children}.C)
 </span>
@@ -1809,7 +1817,6 @@ document.getElementById("paeplT").innerHTML =
 
 document.getElementById("activityTotals").innerHTML = `
 OEPL → ${formatActivities(oeplActivities)}
-<br>
 PAEPL → ${formatActivities(paeplActivities)}
 `;
 
