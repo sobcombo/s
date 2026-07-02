@@ -716,10 +716,6 @@ Save SOB
 Reset Calculator
 </button>
 
-<button onclick="resetAllData()">
-Reset SOB IDs
-</button>
-
 <br>
 
 <button onclick="printA4()">
@@ -789,7 +785,16 @@ DATE : <span id="date"></span>
 <td id="grandT"><b>0</b></td>
 
 <td id="activityTotals" class="activityTotalsCell"></td>
-<td></td>
+<td style="text-align:center;">
+
+<button
+id="resetAllBtn"
+onclick="resetAllData()"
+style="font-size:10px;padding:4px 6px;margin:2px;background:#d32f2f;color:white;">
+Reset All
+</button>
+
+</td>
 
 </tr>
 
