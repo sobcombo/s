@@ -1296,9 +1296,16 @@ function normalizeSob(value){
         .replace(/[^A-Z0-9]/g,"");
 
     // Direct manual entry: exactly six digits
-    if(/^\d{6}$/.test(text)){
+    if(/^\d{6}$/.test(text)) {
+    const number = Number(text);
+
+    if(number >= 100000 && number <= 999999) {
         return text;
     }
+
+    return "";
+}
+
 
     // QR/OCR text: SOB000 followed by six digits
     const match = text.match(/SOB000(\d{6})(?!\d)/);
