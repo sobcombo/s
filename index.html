@@ -571,16 +571,15 @@ body.dark .print-split button{
 
 .scannerBox{
     flex:1;
+    min-height:0;
     width:100%;
     background:#111;
 }
 
 #reader{
-    position:relative;
     width:100%;
     height:100%;
-    min-height:100vh;
-    overflow:hidden;
+    min-height:0;
 }
 
 #reader video{
@@ -591,16 +590,30 @@ body.dark .print-split button{
     object-fit:cover;
 }
 
-/* Prevent any scanner library region from showing a box. */
-#reader__scan_region,
-#reader__dashboard_section,
-#reader__camera_permission_button{
-    width:100%!important;
+#reader{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:100%;
+    overflow:hidden;
 }
 
-#reader__scan_region img,
-#reader__scan_region > div{
+#reader video{
+    display:block;
+    width:100%!important;
+    height:100%!important;
+    min-height:100%;
+    object-fit:cover;
+}
+
+/* Hide only the scanner library controls, not the video. */
+#reader__dashboard_section{
     display:none!important;
+}
+
+#reader__scan_region{
+    width:100%!important;
+    height:100%!important;
 }
 
 @keyframes popIn{
@@ -2704,53 +2717,55 @@ function toggleTheme(){
         dark ? "🌙 Hi," : "🌞 Hi,";
 }
 
-function startScanner(){
+async function startScanner(){
     scanLocked = false;
     scannerOverlay.classList.add("show");
 
-    if(qrScanner){
-        qrScanner.stop()
-            .catch(() => {})
-            .finally(() => {
-                qrScanner = null;
-                initScanner();
-            });
-    }else{
-        initScanner();
+    try{
+        if(qrScanner){
+            try{
+                await qrScanner.stop();
+            }catch(error){
+                console.warn("Previous scanner was not running:",error);
+            }
+
+            try{
+                await qrScanner.clear();
+            }catch(error){
+                console.warn("Previous scanner cleanup failed:",error);
+            }
+
+            qrScanner = null;
+        }
+
+        document.getElementById("reader").innerHTML = "";
+        await initScanner();
+
+    }catch(error){
+        console.error("Scanner initialization failed:",error);
+        alert("Camera could not start. Please allow camera permission and try again.");
+        await closeScanner();
     }
 }
-
 async function initScanner(){
     if(typeof Html5Qrcode === "undefined"){
-        alert("QR scanner library is still loading.");
-        closeScanner();
-        return;
+        throw new Error("QR scanner library is not loaded.");
     }
 
     qrScanner = new Html5Qrcode("reader");
 
-    try{
-        await qrScanner.start(
-            {facingMode:{ideal:"environment"}},
-            {
-                fps:15
-            },
-            onScanSuccess,
-            () => {}
-        );
+    await qrScanner.start(
+        {facingMode:"environment"},
+        {
+            fps:15
+        },
+        onScanSuccess,
+        () => {}
+    );
 
-        /*
-         * QR scanning covers the complete camera view.
-         * OCR starts after the camera has started.
-         */
-        startLiveOcr();
-
-    }catch(error){
-        console.error("Camera start failed:",error);
-        alert("Camera could not start.");
-        closeScanner();
-    }
+    startLiveOcr();
 }
+
 async function getOcrWorker(){
     await loadTesseract();
 
@@ -2837,16 +2852,6 @@ function startLiveOcr(){
 async function closeScanner(){
     stopLiveOcr();
 
-    if(ocrWorker){
-        try{
-            await ocrWorker.terminate();
-        }catch(error){
-            console.warn("OCR worker cleanup failed:",error);
-        }
-
-        ocrWorker = null;
-    }
-
     if(qrScanner){
         try{
             await qrScanner.stop();
@@ -2863,6 +2868,7 @@ async function closeScanner(){
         qrScanner = null;
     }
 
+    document.getElementById("reader").innerHTML = "";
     scannerOverlay.classList.remove("show");
 }
 
@@ -3068,4 +3074,3 @@ setCloudStatus(
 </script>
 </body>
 </html>
-
