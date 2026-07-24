@@ -1282,23 +1282,17 @@ function normalizeSob(value){
         .toUpperCase()
         .replace(/[^A-Z0-9]/g,"");
 
-    const candidates = [
-        text,
-        text.replace(/^S0B/,"SOB"),
-        text.replace(/^5OB/,"SOB"),
-        text.replace(/^S8B/,"SOB")
-    ];
-
-    for(const candidate of candidates){
-        const match = candidate.match(/SOB000([0-9]{6})(?![0-9])/);
-
-        if(match){
-            return match[1];
-        }
+    // Direct manual entry: exactly six digits
+    if(/^\d{6}$/.test(text)){
+        return text;
     }
 
-    return "";
+    // QR/OCR text: SOB000 followed by six digits
+    const match = text.match(/SOB000(\d{6})(?!\d)/);
+
+    return match ? match[1] : "";
 }
+
 
 function calc(){
     if(!combo.value){
