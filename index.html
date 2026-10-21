@@ -128,6 +128,11 @@ select{
     background-position:right 12px center;
 }
 
+#combo,
+#editCombo{
+    font-variant-numeric:tabular-nums;
+}
+
 button{
     margin:6px;
     padding:12px 18px;
@@ -577,20 +582,6 @@ body.dark .print-split button{
 }
 
 #reader{
-    width:100%;
-    height:100%;
-    min-height:0;
-}
-
-#reader video{
-    display:block;
-    width:100%!important;
-    height:100%!important;
-    min-height:100vh;
-    object-fit:cover;
-}
-
-#reader{
     position:relative;
     width:100%;
     height:100%;
@@ -614,11 +605,6 @@ body.dark .print-split button{
 #reader__scan_region{
     width:100%!important;
     height:100%!important;
-}
-
-@keyframes popIn{
-    from{transform:scale(.9);opacity:0}
-    to{transform:scale(1);opacity:1}
 }
 
 @media print{
@@ -857,21 +843,22 @@ body.dark .editCard::-webkit-scrollbar-thumb{
 
 <select id="combo" onchange="calc()">
     <option value="">Select Combo</option>
-    <option value="170,80,70,150">390/300 TU Explorer Combo</option>
-    <option value="170,80,0,227">397/307 Adventure Combo</option>
-    <option value="170,80,28,200">398/308 ECO FUN Combo</option>
-    <option value="170,80,255,0">425/335 Snow Adventure Combo</option>
-    <option value="400,300,0,99">499/399 Aastha Combo</option>
-    <option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
-    <option value="550,375,0,50">600/425 Namah Combo</option>
-    <option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
-    <option value="370,180,325,50">745/555 Viewing Fun Combo</option>
-    <option value="550,375,249,170">969/794 Symbolic Combo</option>
-    <option value="170,80,355,574">1099/1009 Delight Combo</option>
-    <option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
-    <option value="550,375,250,599">1399/1224 All in Fun Combo</option>
-    <option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
-    <option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+
+    <option value="170,80,40,89">299/209&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Explorer Combo</option>
+    <option value="170,80,0,227">397/307&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Eco Adventure Combo</option>
+    <option value="170,80,28,200">398/308&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Eco Fun Combo</option>
+    <option value="170,80,255,0">425/335&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Snow Adventure Combo</option>
+    <option value="470,400,0,100">570/500&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Aastha Combo</option>
+    <option value="170,170,0,529,NA">699/NA&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Adventure Combo</option>
+    <option value="650,475,0,50">700/525&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Namah Combo</option>
+    <option value="470,280,155,150">775/585&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Viewing Fun Combo</option>
+    <option value="470,280,249,50">769/579&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Symbolic Play Combo</option>
+    <option value="170,80,199,520">889/799&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Ultimate Play Combo</option>
+    <option value="470,380,105,350">925/835&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Delight Combo</option>
+    <option value="670,480,199,100">969/779&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Mini Blast Combo</option>
+    <option value="450,275,200,450">1100/925&nbsp;&nbsp;:&nbsp;&nbsp;All In Fun Combo</option>
+    <option value="1450,875,0,100">1550/975&nbsp;&nbsp;:&nbsp;&nbsp;Divine Rush Combo</option>
+    <option value="1500,1500,449,2300,NA">4249/NA&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;Ultimate Mega Combo</option>
 </select>
 
 <br>
@@ -1064,7 +1051,7 @@ body.dark .editCard::-webkit-scrollbar-thumb{
 </div>
 
 <div class="footer-left">
-    26G24 | V4.7 <span id="cloudStatus" title="Cloud status">☁️✅</span>
+    26J21 | V4.9 <span id="cloudStatus" title="Cloud status">☁️✅</span>
 </div>
 
 <div id="scannerOverlay" class="scannerOverlay">
@@ -1356,123 +1343,38 @@ function calc(){
 }
 
 function getVendorBreakup(comboName,pax){
+    comboName = String(comboName || "").toLowerCase();
+
     function line(items){
         return items
             .map(item => `${item.name}: ${item.price * pax}`)
             .join(" | ");
     }
 
-    if(comboName.includes("Snow Adventure")){
-        return `OEPL → ${line([{name:"Snow",price:255}])}`;
-    }
+    /* New October 2026 combos: grouped into the eight existing vendors. */
+    const newBreakups = {
+        "Explorer Combo": `OEPL → Wax: ${40 * pax}\nPAEPL → Eyelusion: ${40 * pax} | WOG: ${49 * pax}`,
+        "Eco Adventure Combo": `PAEPL → Gamezone: ${227 * pax}`,
+        "Eco Fun Combo": `OEPL → Wax: ${28 * pax}\nPAEPL → Mayalok: ${200 * pax}`,
+        "Snow Adventure Combo": `OEPL → Snow: ${255 * pax}`,
+        "Aastha Combo": `PAEPL → Eyelusion: ${50 * pax} | Gamezone: ${50 * pax}`,
+        "Adventure Combo": `PAEPL → Gamezone: ${529 * pax}`,
+        "Namah Combo": `PAEPL → Gamezone: ${50 * pax}`,
+        "Viewing Fun Combo": `OEPL → Food: ${45 * pax} | Souvenir: ${60 * pax} | Wax: ${50 * pax}\nPAEPL → Eyelusion: ${50 * pax} | Gamezone: ${100 * pax}`,
+        "Symbolic Play Combo": `OEPL → Snow: ${200 * pax} | Food: ${49 * pax}\nPAEPL → Gamezone: ${50 * pax}`,
+        "Ultimate Play Combo": `OEPL → Snow: ${199 * pax}\nPAEPL → Gamezone: ${250 * pax} | WOG: ${70 * pax} | Mayalok: ${200 * pax}`,
+        "Delight Combo": `OEPL → Food: ${45 * pax} | Souvenir: ${60 * pax}\nPAEPL → Eyelusion: ${50 * pax} | Gamezone: ${200 * pax} | Mayalok: ${200 * pax}`,
+        "Mini Blast Combo": `OEPL → Food: ${50 * pax} | Souvenir: ${99 * pax} | Wax: ${50 * pax}`,
+        "All in Fun Combo": `OEPL → Snow: ${200 * pax}\nPAEPL → Gamezone: ${250 * pax} | Mayalok: ${200 * pax}`,
+        "Divine Rush Combo": `PAEPL → Gamezone: ${100 * pax}`,
+        "Ultimate Mega Combo": `OEPL → Snow: ${150 * pax} | Food: ${99 * pax} | Souvenir: ${100 * pax} | Wax: ${100 * pax}\nPAEPL → Eyelusion: ${50 * pax} | Gamezone: ${2100 * pax} | Mayalok: ${150 * pax}`
+    };
 
-    if(comboName.includes("Adventure Combo")){
-        return `PAEPL → ${line([{name:"Gamezone",price:227}])}`;
-    }
+    const newCombo = Object.keys(newBreakups)
+        .find(name => comboName.includes(name.toLowerCase()));
 
-    if(comboName.includes("TU Explorer")){
-        return `OEPL → ${line([{name:"Wax",price:70}])}
-PAEPL → ${line([
-    {name:"Eyelusion",price:70},
-    {name:"WOG",price:80}
-])}`;
-    }
-
-    if(comboName.includes("ECO FUN")){
-        return `OEPL → ${line([{name:"Wax",price:28}])}
-PAEPL → ${line([{name:"Mayalok",price:200}])}`;
-    }
-
-    if(comboName.includes("Aastha")){
-        return `PAEPL → ${line([{name:"Gamezone",price:99}])}`;
-    }
-
-    if(comboName.includes("Shiv Ganesha")){
-        return `PAEPL → ${line([
-    {name:"Eyelusion",price:50},
-    {name:"Gamezone",price:50},
-    {name:"WOG",price:75}
-])}`;
-    }
-
-    if(comboName.includes("Namah")){
-        return `PAEPL → ${line([{name:"Gamezone",price:50}])}`;
-    }
-
-    if(comboName.includes("Ultimate Play")){
-        return `PAEPL → ${line([{name:"Gamezone",price:529}])}`;
-    }
-
-    if(comboName.includes("Viewing Fun")){
-        return `OEPL → ${line([
-    {name:"Snow",price:225},
-    {name:"Food",price:100}
-])}
-PAEPL → ${line([{name:"Gamezone",price:50}])}`;
-    }
-
-    if(comboName.includes("Symbolic")){
-        return `OEPL → ${line([
-    {name:"Snow",price:200},
-    {name:"Wax",price:49}
-])}
-PAEPL → ${line([
-    {name:"Gamezone",price:100},
-    {name:"WOG",price:70}
-])}`;
-    }
-
-    if(
-        comboName.includes("Delight") ||
-        comboName.includes("Mini Blast")
-    ){
-        return `OEPL → ${line([
-    {name:"Snow",price:200},
-    {name:"Food",price:45},
-    {name:"Souvenir",price:60},
-    {name:"Wax",price:50}
-])}
-PAEPL → ${line([
-    {name:"Eyelusion",price:50},
-    {name:"Mayalok",price:200},
-    {name:"Gamezone",price:249},
-    {name:"WOG",price:75}
-])}`;
-    }
-
-    if(comboName.includes("All in Fun")){
-        return `OEPL → ${line([
-    {name:"Snow",price:200},
-    {name:"Wax",price:50}
-])}
-PAEPL → ${line([
-    {name:"Eyelusion",price:50},
-    {name:"Mayalok",price:200},
-    {name:"Gamezone",price:279},
-    {name:"WOG",price:70}
-])}`;
-    }
-
-    if(comboName.includes("Divine Rush")){
-        return `PAEPL → ${line([
-    {name:"Gamezone",price:100},
-    {name:"WOG",price:50}
-])}`;
-    }
-
-    if(comboName.includes("Ultimate Mega")){
-        return `OEPL → ${line([
-    {name:"Snow",price:150},
-    {name:"Food",price:99},
-    {name:"Souvenir",price:100},
-    {name:"Wax",price:100}
-])}
-PAEPL → ${line([
-    {name:"Eyelusion",price:50},
-    {name:"Mayalok",price:150},
-    {name:"Gamezone",price:2100},
-    {name:"WOG",price:50}
-])}`;
+    if(newCombo){
+        return newBreakups[newCombo];
     }
 
     return "-";
@@ -2716,12 +2618,14 @@ function getReceiptActivityLines(breakup){
 }
   
 function toggleTheme(){
-    const dark = document.body.classList.toggle("dark");
+    const nextTheme = document.body.classList.contains("dark")
+        ? "light"
+        : "dark";
 
-    localStorage.setItem("theme",dark ? "dark" : "light");
-
+    document.body.classList.toggle("dark",nextTheme === "dark");
+    localStorage.setItem("theme",nextTheme);
     document.querySelector(".hiText").textContent =
-        dark ? "🌙 Hi," : "🌞 Hi,";
+        nextTheme === "dark" ? "🌙 Hi," : "🌞 Hi,";
 }
 
 async function startScanner(){
@@ -3029,8 +2933,11 @@ window.addEventListener("online",() =>
 );
 
 function restoreFormState(){
-    combo.value =
-        localStorage.getItem("lastCombo") || "";
+    const savedCombo = localStorage.getItem("lastCombo") || "";
+    combo.value = Array.from(combo.options)
+        .some(option => option.value === savedCombo)
+        ? savedCombo
+        : "";
 
     adults.value =
         localStorage.getItem("lastAdults") || "";
@@ -3069,10 +2976,14 @@ usernameInput.addEventListener("change",() => {
     render();
 });
 
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-    document.querySelector(".hiText").textContent = "🌙 Hi,";
-}
+const savedTheme = localStorage.getItem("theme");
+
+document.body.classList.toggle("dark", savedTheme === "dark");
+
+document.querySelector(".hiText").textContent =
+    savedTheme === "dark" ? "🌙 Hi," : "🌞 Hi,";
+
+
 loadUserLocalData();
 render();
 setCloudStatus(
